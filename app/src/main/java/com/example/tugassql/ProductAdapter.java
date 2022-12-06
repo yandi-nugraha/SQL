@@ -13,17 +13,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
-    private final ArrayList<Product> values;
+    private ArrayList<Product> values;
     private final LayoutInflater inflater;
 
     public static final String NAME_EXTRA = "NAME-KEY";
     public static final String PRICE_EXTRA = "PRICE-KEY";
+    public static final String ID_EXTRA = "ID-KEY";
 
     public ProductAdapter(Context context, ArrayList<Product> values) {
         this.values = values;
         this.inflater = LayoutInflater.from(context);
     }
 
+    public void setFilteredList(ArrayList<Product> filteredList) {
+        this.values = filteredList;
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
@@ -44,6 +49,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
                 Intent intent = new Intent(view.getContext(), DetailProductActivity.class);
                 intent.putExtra(NAME_EXTRA, product.getName());
                 intent.putExtra(PRICE_EXTRA, String.valueOf(product.getPrice()));
+                intent.putExtra(ID_EXTRA, product.getId());
                 view.getContext().startActivity(intent);
             }
         });

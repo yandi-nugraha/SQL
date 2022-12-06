@@ -44,6 +44,6 @@ public class AddProductActivity extends AppCompatActivity {
         product.setPrice(Integer.valueOf(priceEditText.getText().toString()));
 
         databaseHelper.insertRecord(product);
-        Toast.makeText(AddProductActivity.this, "Success", Toast.LENGTH_SHORT).show();
+        Toast.makeText(AddProductActivity.this, "Data successfully added!", Toast.LENGTH_SHORT).show();
     }
 }

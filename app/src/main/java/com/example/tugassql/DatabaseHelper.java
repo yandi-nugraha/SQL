@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "db";
+    private static final String DATABASE_NAME = "db2";
     private static final int DATABASE_VERSION = 1;
 
     private static final String PRODUCT_TABLE = "products";
@@ -25,7 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String CREATE_TABLE_PRODUCT = "CREATE TABLE " + PRODUCT_TABLE + "(" + PRODUCT_ID +
-                " INTEGER PRIMARY KEY, " + PRODUCT_NAME + " TEXT, " + PRODUCT_PRICE +
+                " INTEGER PRIMARY KEY AUTOINCREMENT, " + PRODUCT_NAME + " TEXT, " + PRODUCT_PRICE +
                 " INTEGER)";
         sqLiteDatabase.execSQL(CREATE_TABLE_PRODUCT);
     }
@@ -45,22 +45,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         db.insert(PRODUCT_TABLE, null, values);
         db.close();
-    }
-
-    public Product getProductFromName(String name) {
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.query(PRODUCT_TABLE, new String[] {PRODUCT_ID, PRODUCT_NAME, PRODUCT_PRICE},
-                PRODUCT_NAME + "=?", new String[] {name}, null, null, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-        }
-
-        Product product = new Product();
-        product.setId(cursor.getInt(0));
-        product.setName(cursor.getString(1));
-        product.setPrice(cursor.getInt(2));
-
-        return product;
     }
 
     public ArrayList<Product> getAllProducts() {
@@ -84,19 +68,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return allProducts;
     }
 
-    public int updateProduct(Product product) {
+    public void updateProduct(Product product) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(PRODUCT_NAME, product.getName());
         values.put(PRODUCT_PRICE, product.getPrice());
-
-        return db.update(PRODUCT_TABLE, values, PRODUCT_ID + "=?",
+        db.update(PRODUCT_TABLE, values, PRODUCT_ID + "=?",
                 new String[] {String.valueOf(product.getId())});
     }
 
-    public void deleteProduct(Product product) {
+    public void deleteProduct(int id) {
         SQLiteDatabase db = getWritableDatabase();
-        db.delete(PRODUCT_TABLE, PRODUCT_ID + "=?", new String[] {String.valueOf(product.getId())});
+        db.delete(PRODUCT_TABLE, PRODUCT_ID + "=?", new String[] {String.valueOf(id)});
         db.close();
     }
 }
